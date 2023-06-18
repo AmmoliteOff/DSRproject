@@ -19,7 +19,7 @@ public class AuthProvider implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication)
             throws AuthenticationException {
-        try {
+        try{
             String name = authentication.getName();
             String password = authentication.getCredentials().toString();
             ArrayList<GrantedAuthority> grantedAuthority = new ArrayList<GrantedAuthority>();

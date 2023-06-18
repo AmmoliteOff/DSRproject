@@ -15,10 +15,10 @@ public class AccountingUserDetailsService implements UserDetailsService {
     private UsersDAO usersDao;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = usersDao.getUser(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = usersDao.getUser(email);
         if (user == null) {
-            throw new UsernameNotFoundException(username);
+            throw new UsernameNotFoundException(email);
         }
         return new AccountingUserPrincipal(user);
     }

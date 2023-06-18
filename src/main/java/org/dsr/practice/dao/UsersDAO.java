@@ -12,7 +12,15 @@ public class UsersDAO {
 
 
     public User getUser(String email) {
-        return repo.findByEmail(email);
+        var a = repo.findByEmail(email);
+        return repo.findByEmail(email.replaceAll("\n","").replaceAll(" ", ""));
+    }
+
+    public void update(User user){
+        repo.save(user);
+    }
+    public User getUserById(Long id){
+        return repo.findByUserId(id);
     }
 
     public User getUser(long id){

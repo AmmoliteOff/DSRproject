@@ -30,7 +30,6 @@ public class AuthDAO {
             repo.save(user);
         }
         try {
-            //mailSender.sendSimpleMessage("antoshka_agibalov@mail.ru", "Code", user.getCode());
             mailSender.sendSimpleMessage(user.getEmail(), "Code", user.getCode());
             return true;
         }
