@@ -26,7 +26,7 @@ public class AuthDAO {
             repo.save(user);
         }
         catch(Exception e){
-            user = new User(email, "New", "User");
+            user = new User(email);
             repo.save(user);
         }
         try {
@@ -40,9 +40,9 @@ public class AuthDAO {
     public String GetRole(String email, String password) throws AuthenticationException {
         try {
             var usr = repo.findByEmail(email);
-                if(usr.getCode().equals(password)){
+                if(usr.getCode().equals(password)) {
                     return usr.getRole();
-            }
+                }
             return null;
         }
         catch (AuthenticationException e){

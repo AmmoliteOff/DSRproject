@@ -20,25 +20,37 @@ public class Bill {
     @JoinColumn(name = "accountId")
     private Account account;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "billId")
+    @JoinColumn(name = "userId")
     private User user;
 
     @Column
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private double debt;
 
     @Column
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String title;
 
     @Column
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String description;
 
     public Bill() {
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Bill(Account account, User user, double debt, String title, String description) {
         this.account = account;
-        //this.user = user;
+        this.user = user;
         this.debt = debt;
         this.title = title;
         this.description = description;

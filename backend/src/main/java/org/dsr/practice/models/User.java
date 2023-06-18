@@ -7,6 +7,8 @@ import org.dsr.practice.utils.JsonViews;
 import org.dsr.practice.utils.generators.CodeGenerator;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 @Entity
 @Table( name = "users" )
 public class User {
@@ -37,6 +39,10 @@ public class User {
     @Column
     @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
     private String surname;
+
+    @Column
+    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
+    private Double totalDebt;
     @JsonIgnore
     @Column
     private String role;
@@ -45,12 +51,13 @@ public class User {
     @Column
     private String email;
 
+    @JsonView({JsonViews.OnlyForUser.class})
     @OneToMany(mappedBy = "user")
     private List<Bill> bills;
 
 
     @ManyToMany
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     @JoinTable(
             name = "accounts_users",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -68,6 +75,18 @@ public class User {
         this.accounts = accounts;
     }
 
+    public Double getTotalDebt() {
+        double res = 0;
+        for(int i = 0; i<bills.size(); i++){
+            res+=bills.get(i).getDebt();
+        }
+        return res;
+    }
+
+    public void setTotalDebt(Double totalDebt) {
+        this.totalDebt = totalDebt;
+    }
+
     public User(String phone, String name, String surname){
         //this.totalDebt = getTotalDebt();
         this.userId = null;
@@ -79,6 +98,11 @@ public class User {
         this.imgLink = "";
     }
 
+    public User(String email) {
+        this.role = "USER";
+        this.code = CodeGenerator.getNewCode();
+        this.email = email;
+    }
 
 //    public Double getTotalDebt(){
 //        double totalDebt = 0;
@@ -94,6 +118,9 @@ public class User {
         return bills;
     }
 
+    public List<Bill> getBills(Long accountId) {
+        return bills.stream().filter(bill -> bill.getAccount().getAccountId() == accountId).collect(Collectors.toList());
+    }
     public void setBills(List<Bill> bills) {
         this.bills = bills;
     }

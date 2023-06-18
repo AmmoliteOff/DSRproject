@@ -1,5 +1,6 @@
 package org.dsr.practice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
@@ -16,15 +17,19 @@ public class Account {
     private Long accountId;
 
     @Column
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String title;
 
     @Column
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String description;
 
     @ManyToMany(mappedBy = "accounts")
+    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class})
     private List<User> users;
 
     @OneToMany(mappedBy = "account")
+    @JsonIgnore
     private List<Bill> bills;
 
     public Account() {

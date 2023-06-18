@@ -33,6 +33,14 @@ public class BillsController {
     @Autowired
     AccountsDAO accountsDao;
 
+    @GetMapping(value = "/api/getUserBills")
+    @JsonView(JsonViews.LimitedPublic.class)
+    public ResponseEntity getUserBills(@RequestParam(value = "accountId") Long accountId){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = UsersDao.getUser(auth.getPrincipal().toString());
+        return new ResponseEntity(user.getBills(accountId), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/api/addBill")
     public ResponseEntity addBill(@RequestParam(value="users") String[] users, @RequestParam(value = "title")String title, @RequestParam(value = "description") String description, @RequestParam(value = "accountId") Long accountId){
         List<User> usersInBill = new ArrayList<User>();
