@@ -1,20 +1,25 @@
 package org.dsr.practice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "accounts")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accountId", nullable = false, unique = true)
-    @JsonView({JsonViews.Public.class,JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @Column(nullable = false, unique = true)
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private Long accountId;
+
+    @OneToMany(mappedBy = "account")
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    private List<Bill> bills;
 
     @Column
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
@@ -25,12 +30,15 @@ public class Account {
     private String description;
 
     @ManyToMany(mappedBy = "accounts")
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class})
-    private List<User> users;
+    @JsonView({JsonViews.Public.class,JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    private Set<User> users;
 
-    @OneToMany(mappedBy = "account")
-    @JsonIgnore
-    private List<Bill> bills;
+    public Account(String title, String description, Set<User> users) {
+        this.accountId = null;
+        this.title = title;
+        this.users = users;
+        this.description = description;
+    }
 
     public Account() {
     }
@@ -41,6 +49,14 @@ public class Account {
 
     public void setAccountId(Long accountId) {
         this.accountId = accountId;
+    }
+
+    public List<Bill> getBills() {
+        return bills;
+    }
+
+    public void setBills(List<Bill> bills) {
+        this.bills = bills;
     }
 
     public String getTitle() {
@@ -59,25 +75,11 @@ public class Account {
         this.description = description;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public List<Bill> getBills() {
-        return bills;
-    }
-
-    public void setBills(List<Bill> bills) {
-        this.bills = bills;
-    }
-
-    public Account(String title, String description, List<User> users) {
-        this.title = title;
-        this.description = description;
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 }

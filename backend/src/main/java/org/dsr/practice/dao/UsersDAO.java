@@ -7,9 +7,11 @@ import org.dsr.practice.repos.UserRepository;
 
 @Component
 public class UsersDAO {
-    @Autowired
     UserRepository repo;
 
+    public UsersDAO(@Autowired UserRepository repo) {
+        this.repo = repo;
+    }
 
     public User getUser(String email) {
         var a = repo.findByEmail(email);

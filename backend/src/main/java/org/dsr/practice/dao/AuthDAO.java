@@ -1,10 +1,8 @@
 package org.dsr.practice.dao;
 
-import org.aspectj.apache.bcel.classfile.Code;
 import org.dsr.practice.models.User;
 import org.dsr.practice.repos.UserRepository;
 import org.dsr.practice.utils.generators.CodeGenerator;
-import org.dsr.practice.utils.generators.Sha256Generator;
 import org.dsr.practice.utils.mail.MailSenderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
@@ -12,11 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthDAO {
-    @Autowired
     UserRepository repo;
 
-    @Autowired
     MailSenderImpl mailSender;
+
+    public AuthDAO(@Autowired UserRepository repo, @Autowired MailSenderImpl mailSender) {
+        this.repo = repo;
+        this.mailSender = mailSender;
+    }
 
     public boolean sendCode(String email){
         User user;

@@ -8,26 +8,16 @@ import org.dsr.practice.utils.JsonViews;
 import java.util.List;
 
 @Entity
-@Table(name="bills")
 public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "billId", nullable = false, unique = true)
-    @JsonView({JsonViews.Public.class,JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @Column(nullable = false, unique = true)
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private Long billId;
 
     @ManyToOne
-    @JoinColumn(name = "accountId")
-    private Account account;
-
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
-
-    @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
-    private double debt;
+    private Account account;
 
     @Column
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
@@ -37,38 +27,23 @@ public class Bill {
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String description;
 
+    @OneToMany(mappedBy = "bill")
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    private List<BillInfo> billInfo;
+
     public Bill() {
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Bill(Account account, User user, double debt, String title, String description) {
+    public Bill(Account account, String title, String description, List<BillInfo> billInfo) {
         this.account = account;
-        this.user = user;
-        this.debt = debt;
         this.title = title;
         this.description = description;
+        this.billInfo = billInfo;
     }
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
+    public Bill(Account account, String title, String description) {
+        this.account = account;
         this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -88,19 +63,27 @@ public class Bill {
         this.account = account;
     }
 
-//    public User getUser() {
-//        return user;
-//    }
-
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
-
-    public double getDebt() {
-        return debt;
+    public String getTitle() {
+        return title;
     }
 
-    public void setDebt(double debt) {
-        this.debt = debt;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<BillInfo> getBillInfo() {
+        return billInfo;
+    }
+
+    public void setBillInfo(List<BillInfo> billInfo) {
+        this.billInfo = billInfo;
     }
 }

@@ -1,7 +1,6 @@
 package org.dsr.practice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
 import org.dsr.practice.utils.generators.CodeGenerator;
@@ -11,38 +10,41 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table( name = "users" )
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "userId", scope = JsonViews.OnlyForUser.class)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    @JsonIgnore
     private Long userId;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
-    String imgLink;
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    private String imgLink;
+
+    @ManyToMany
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class})
+    @JoinTable(
+            name = "account_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "account_id"))
+    private List<Account> accounts;
 
     @JsonIgnore
     @Column
-    @JsonView(JsonViews.OnlyForUser.class)
     private String phone;
-//    @Column
-//    @JsonView(JsonViews.OnlyForUser.class)
-//    private Double totalDebt;
     @JsonIgnore
     @Column
     private String code;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String name;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String surname;
 
-    @Column
-    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class, JsonViews.LimitedPublic.class})
-    private Double totalDebt;
     @JsonIgnore
     @Column
     private String role;
@@ -51,44 +53,17 @@ public class User {
     @Column
     private String email;
 
-    @JsonView({JsonViews.OnlyForUser.class})
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Bill> bills;
+    private List<BillInfo> billInfos;
 
 
-    @ManyToMany
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
-    @JoinTable(
-            name = "accounts_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "account_id"))
-    private List<Account> accounts;
 
     public User() {
     }
 
-    public List<Account> getAccounts() {
-        return accounts;
-    }
-
-    public void setAccounts(List<Account> accounts) {
-        this.accounts = accounts;
-    }
-
-    public Double getTotalDebt() {
-        double res = 0;
-        for(int i = 0; i<bills.size(); i++){
-            res+=bills.get(i).getDebt();
-        }
-        return res;
-    }
-
-    public void setTotalDebt(Double totalDebt) {
-        this.totalDebt = totalDebt;
-    }
 
     public User(String phone, String name, String surname){
-        //this.totalDebt = getTotalDebt();
         this.userId = null;
         this.name = name;
         this.phone = phone;
@@ -114,15 +89,12 @@ public class User {
 //    }
 
 
-    public List<Bill> getBills() {
-        return bills;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public List<Bill> getBills(Long accountId) {
-        return bills.stream().filter(bill -> bill.getAccount().getAccountId() == accountId).collect(Collectors.toList());
-    }
-    public void setBills(List<Bill> bills) {
-        this.bills = bills;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     public Long getUserId() {

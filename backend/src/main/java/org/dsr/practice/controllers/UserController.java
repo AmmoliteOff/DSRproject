@@ -13,15 +13,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class UsersController {
-    @Autowired
-    UsersDAO UsersDAO;
-    @JsonView(JsonViews.LimitedPublic.class)
+public class UserController {
 
+    UsersDAO usersDAO;
+
+    public UserController(@Autowired UsersDAO usersDAO) {
+        this.usersDAO = usersDAO;
+    }
+
+    @JsonView(JsonViews.LimitedPublic.class)
     @GetMapping(value = "/api/getUserInfo")
     public ResponseEntity getUserInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = UsersDAO.getUser(auth.getPrincipal().toString());
+        User user = usersDAO.getUser(auth.getPrincipal().toString());
         return new ResponseEntity(user, HttpStatus.OK);
     }
 }
