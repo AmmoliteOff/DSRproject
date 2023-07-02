@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
 import Auth from "./Auth";
 import React from "react";
+import { Route, Routes, useNavigate} from "react-router-dom";
 import Dashboard from "./Dashboard";
+import Account from "./Account";
+import axios from "axios";
 
 function App() {
 
   const[isAuth, setAuth] = useState(false);
+  const[userInfo, setUserInfo] = useState([]);
+  const navigate = useNavigate();
+
 
  function updateAuthStatus(status){
   if(status){
     var time = new Date(Date.now())
     time.setMinutes(time.getMinutes() + 180)
     document.cookie = "auth=true;expires="+time+"; path="/"; domain=localhost; secure"
+    navigate("/dashboard")
   }
   else{
     document.cookie = "auth=false"
+    navigate("/login")
   }
   setAuth(status)
  }
@@ -38,12 +46,11 @@ function App() {
  }, [isAuth])
 
   return (
-    <React.Fragment>
-    {!isAuth?
-    <Auth updateAuthStatus={updateAuthStatus}/>:
-    <Dashboard updateAuthStatus={updateAuthStatus}/>
-    }
-    </React.Fragment>
+     <Routes>
+             <Route path="/dashboard/*" element={<Dashboard updateAuthStatus = {updateAuthStatus}/>}/>
+             <Route path="/login" element={<Auth updateAuthStatus = {updateAuthStatus}/>}/>
+             <Route path="/dashboard/account/:id" element={<Account updateAuthStatus = {updateAuthStatus}/>}/>
+     </Routes>
   )
 }
 
