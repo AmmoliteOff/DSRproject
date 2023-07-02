@@ -18,10 +18,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
+    @JsonView({JsonViews.BasicDetails.class})
     private Long userId;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.BasicDetails.class})
     private String imgLink;
 
     @ManyToMany
@@ -39,10 +40,10 @@ public class User {
     @Column
     private String code;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
     private String name;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
     private String surname;
 
     @JsonIgnore

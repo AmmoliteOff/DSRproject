@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-public class AccountsService {
+public class  AccountsService {
 
     private AccountRepository accountRepository;
     private UsersService usersService;
