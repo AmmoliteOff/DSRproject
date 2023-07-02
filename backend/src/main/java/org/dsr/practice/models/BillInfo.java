@@ -2,8 +2,10 @@ package org.dsr.practice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
+import org.dsr.practice.utils.UserJsonSerializer;
 
 import java.util.List;
 
@@ -20,12 +22,13 @@ public class BillInfo {
     private Bill bill;
 
     @ManyToOne
-    @JsonIgnore
+    @JsonSerialize(using = UserJsonSerializer.class)
+    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private User user;
 
     @Column
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
-    private int debt;
+    private Long debt;
 
     public BillInfo() {
     }
@@ -33,7 +36,7 @@ public class BillInfo {
     public BillInfo(Bill bill, User user, Long debt) {
         this.bill = bill;
         this.user = user;
-        this.debt = (int) (debt*1000); //значимы только 3 знака после запятой
+        this.debt = debt;
     }
 
     public Long getBillInfoId() {
@@ -60,11 +63,11 @@ public class BillInfo {
         this.user = user;
     }
 
-    public int getDebt() {
+    public Long getDebt() {
         return debt;
     }
 
-    public void setDebt(int debt) {
+    public void setDebt(Long debt) {
         this.debt = debt;
     }
 }

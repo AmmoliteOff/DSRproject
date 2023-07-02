@@ -1,16 +1,15 @@
-package org.dsr.practice.dao;
+package org.dsr.practice.services;
 
 import org.dsr.practice.models.BillInfo;
 import org.dsr.practice.repos.BillInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class BillsInfoDAO {
+@Service
+public class BillInfoService {
+    private BillInfoRepository billInfoRepository;
 
-    BillInfoRepository billInfoRepository;
-
-    public BillsInfoDAO(@Autowired BillInfoRepository billInfoRepository) {
+    public BillInfoService(@Autowired BillInfoRepository billInfoRepository){
         this.billInfoRepository = billInfoRepository;
     }
 

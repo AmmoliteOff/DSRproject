@@ -8,6 +8,7 @@ import org.dsr.practice.utils.JsonViews;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class Account {
@@ -45,6 +46,15 @@ public class Account {
 
     public Long getAccountId() {
         return accountId;
+    }
+
+    public Bill getBill(Long billId){
+        try {
+            return bills.stream().filter(bill -> billId == bill.getBillId()).collect(Collectors.toList()).get(0);
+        }
+        catch (Exception e){
+            return null;
+        }
     }
 
     public void setAccountId(Long accountId) {

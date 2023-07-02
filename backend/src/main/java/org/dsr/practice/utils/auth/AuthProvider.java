@@ -1,5 +1,6 @@
 package org.dsr.practice.utils.auth;
-import org.dsr.practice.dao.AuthDAO;
+
+import org.dsr.practice.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,8 +14,11 @@ import java.util.ArrayList;
 
 @Component
 public class AuthProvider implements AuthenticationProvider {
-    @Autowired
-    AuthDAO authdao;
+    AuthService authService;
+
+    public AuthProvider(@Autowired AuthService authService) {
+        this.authService = authService;
+    }
 
     @Override
     public Authentication authenticate(Authentication authentication)
@@ -23,9 +27,9 @@ public class AuthProvider implements AuthenticationProvider {
             String name = authentication.getName();
             String password = authentication.getCredentials().toString();
             ArrayList<GrantedAuthority> grantedAuthority = new ArrayList<GrantedAuthority>();
-            String role = authdao.GetRole(name,password);
+            String role = authService.GetRole(name,password);
             if(role!=null) {
-                authdao.changeCode(name);
+                authService.changeCode(name);
                 grantedAuthority.add(new SimpleGrantedAuthority(role));
                 return new UsernamePasswordAuthenticationToken(
                         name, password, grantedAuthority);

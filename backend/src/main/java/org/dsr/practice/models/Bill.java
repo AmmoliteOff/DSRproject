@@ -1,6 +1,7 @@
 package org.dsr.practice.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
@@ -27,24 +28,38 @@ public class Bill {
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
     private String description;
 
-    @OneToMany(mappedBy = "bill")
+    @Column
     @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    private Long fullPrice;
+
+    @OneToMany(mappedBy = "bill")
+    @JsonView({JsonViews.Public.class, JsonViews.OnlyForUser.class})
     private List<BillInfo> billInfo;
 
     public Bill() {
     }
 
-    public Bill(Account account, String title, String description, List<BillInfo> billInfo) {
+    public Bill(Account account, String title, String description, List<BillInfo> billInfo, Long fullPrice) {
         this.account = account;
         this.title = title;
         this.description = description;
         this.billInfo = billInfo;
+        this.fullPrice = fullPrice;
     }
 
-    public Bill(Account account, String title, String description) {
+    public Bill(Account account, String title, String description, Long fullPrice) {
         this.account = account;
         this.title = title;
         this.description = description;
+        this.fullPrice = fullPrice;
+    }
+
+    public Long getFullPrice() {
+        return fullPrice;
+    }
+
+    public void setFullPrice(Long fullPrice) {
+        this.fullPrice = fullPrice;
     }
 
     public Long getBillId() {

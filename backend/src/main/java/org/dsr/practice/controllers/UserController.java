@@ -1,8 +1,8 @@
 package org.dsr.practice.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.dsr.practice.dao.UsersDAO;
 import org.dsr.practice.models.User;
+import org.dsr.practice.services.UsersService;
 import org.dsr.practice.utils.JsonViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,17 +15,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class UserController {
 
-    UsersDAO usersDAO;
+    UsersService usersService;
 
-    public UserController(@Autowired UsersDAO usersDAO) {
-        this.usersDAO = usersDAO;
+    public UserController(@Autowired UsersService usersService) {
+        this.usersService = usersService;
     }
 
     @JsonView(JsonViews.LimitedPublic.class)
     @GetMapping(value = "/api/getUserInfo")
     public ResponseEntity getUserInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = usersDAO.getUser(auth.getPrincipal().toString());
+        User user = usersService.getUser(auth.getPrincipal().toString());
         return new ResponseEntity(user, HttpStatus.OK);
     }
 }

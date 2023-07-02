@@ -1,14 +1,12 @@
 package org.dsr.practice.controllers;
 
-import org.dsr.practice.dao.AccountsDAO;
-import org.dsr.practice.dao.UsersDAO;
-import org.dsr.practice.models.Account;
-import org.dsr.practice.models.User;
+import com.fasterxml.jackson.annotation.JsonView;
+import org.dsr.practice.services.AccountsService;
+import org.dsr.practice.utils.JsonViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,38 +16,27 @@ import java.util.Set;
 
 @RestController
 public class AccountController {
-    UsersDAO usersDAO;
 
-    AccountsDAO accountsDAO;
+    AccountsService accountsService;
 
-
-    public AccountController(@Autowired UsersDAO usersDAO, @Autowired AccountsDAO accountsDAO) {
-        this.usersDAO = usersDAO;
-        this.accountsDAO = accountsDAO;
+    public AccountController(@Autowired AccountsService accountsService) {
+        this.accountsService = accountsService;
     }
 
     @PostMapping("/api/createAccount")
     public ResponseEntity createAccount(@RequestParam(name = "title") String title, @RequestParam(name = "description") String description, @RequestParam(name = "users") String[] users){
-        try {
-            Set<User> usersIn = new HashSet<User>();
-            for (String str:users) {
-                var usr = usersDAO.getUserById(Long.parseLong(str));
-                usersIn.add(usr);
-            }
-            Account acc= new Account(title, description, usersIn);
-            var account = accountsDAO.Add(acc);
-            for(User usr:usersIn){
-                var c = usr.getAccounts();
-                c.add(account);
-                usr.setAccounts(c);
-                usersDAO.update(usr);
-            }
-            return new ResponseEntity(HttpStatus.OK);
-        }
-        catch (Exception e){
-            //throw
-            var a = 0;
+            if(accountsService.createAccount(title, description, users))
+                return new ResponseEntity(HttpStatus.OK);
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/api/account")
+    @JsonView(JsonViews.LimitedPublic.class)
+    public ResponseEntity getAccount(@RequestParam(name = "accountId") Long accountId){
+        var account = accountsService.getAccount(accountId);
+        if(account!=null){
+            return new ResponseEntity(account, HttpStatus.OK);
         }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
     }
 }

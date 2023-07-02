@@ -1,9 +1,11 @@
 package org.dsr.practice.config;
 
 import jakarta.servlet.http.HttpServletResponse;
+import org.dsr.practice.services.UsersService;
 import org.dsr.practice.utils.auth.AccountingUserDetailsService;
 import org.dsr.practice.utils.auth.AuthProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -32,11 +34,15 @@ import java.util.Arrays;
 public class WebSecurityConfig implements WebMvcConfigurer{
 
     private AuthProvider authProvider;
+    private String frontendUrl;
+    private String rememberMeKey;
     DataSource dataSource;
 
-    public WebSecurityConfig(@Autowired DataSource dataSource, @Autowired AuthProvider authProvider){
+    public WebSecurityConfig(@Value("${backend.rememberMeKey}") String rememberMeKey, @Value("${frontend.url}") String frontendUrl, @Autowired DataSource dataSource, @Autowired AuthProvider authProvider){
         this.dataSource = dataSource;
         this.authProvider = authProvider;
+        this.frontendUrl =frontendUrl;
+        this.rememberMeKey = rememberMeKey;
     }
 
     @Bean
@@ -58,7 +64,7 @@ public class WebSecurityConfig implements WebMvcConfigurer{
                 UrlBasedCorsConfigurationSource();
         var configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
-        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin(frontendUrl);
         configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
@@ -67,7 +73,6 @@ public class WebSecurityConfig implements WebMvcConfigurer{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable().cors();
-       // http.addFilterBefore(new AuthFilter(), UsernamePasswordAuthenticationFilter.class)
         http
                 .authenticationManager(authManager(http))
                 .authorizeHttpRequests()
@@ -82,7 +87,6 @@ public class WebSecurityConfig implements WebMvcConfigurer{
                 .formLogin().passwordParameter("code").usernameParameter("email")
                 .successHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
-                    //addSameSiteCookieAttribute(response);
                 }).failureHandler((request, response, exception) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
                 .permitAll()
                 .and()
@@ -93,27 +97,11 @@ public class WebSecurityConfig implements WebMvcConfigurer{
                 .rememberMe()
                 .tokenRepository(persistentTokenRepository()).userDetailsService(userDetailsService())
                 .alwaysRemember(true)
-                //.rememberMeParameter("remember-me")
                 .tokenValiditySeconds(24*60*60*14)
-                .key("DSR_remember_me_key");
+                .key(rememberMeKey);
         return http.build();
     }
 
-//    private void addSameSiteCookieAttribute(HttpServletResponse response) {
-//        Collection<String> headers = response.getHeaders(HttpHeaders.SET_COOKIE);
-//        boolean firstHeader = true;
-//        // there can be multiple Set-Cookie attributes
-//        for (String header : headers) {
-//            if (firstHeader) {
-//                response.setHeader(HttpHeaders.SET_COOKIE,
-//                        String.format("%s; %s", header, "SameSite=None; Secure"));
-//                firstHeader = false;
-//                continue;
-//            }
-//            response.addHeader(HttpHeaders.SET_COOKIE,
-//                    String.format("%s; %s", header, "SameSite=None; Secure"));
-//        }
-//    }
     @Bean
     public PersistentTokenRepository persistentTokenRepository(){
         JdbcTokenRepositoryImpl tokenRepository = new JdbcTokenRepositoryImpl();

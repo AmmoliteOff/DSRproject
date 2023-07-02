@@ -1,4 +1,4 @@
-package org.dsr.practice.dao;
+package org.dsr.practice.services;
 
 import org.dsr.practice.models.User;
 import org.dsr.practice.repos.UserRepository;
@@ -6,15 +6,15 @@ import org.dsr.practice.utils.generators.CodeGenerator;
 import org.dsr.practice.utils.mail.MailSenderImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class AuthDAO {
+@Service
+public class AuthService {
     UserRepository repo;
 
     MailSenderImpl mailSender;
 
-    public AuthDAO(@Autowired UserRepository repo, @Autowired MailSenderImpl mailSender) {
+    public AuthService(@Autowired UserRepository repo, @Autowired MailSenderImpl mailSender) {
         this.repo = repo;
         this.mailSender = mailSender;
     }
@@ -41,9 +41,9 @@ public class AuthDAO {
     public String GetRole(String email, String password) throws AuthenticationException {
         try {
             var usr = repo.findByEmail(email);
-                if(usr.getCode().equals(password)) {
-                    return usr.getRole();
-                }
+            if(usr.getCode().equals(password)) {
+                return usr.getRole();
+            }
             return null;
         }
         catch (AuthenticationException e){

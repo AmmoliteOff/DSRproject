@@ -97,6 +97,14 @@ public class User {
         this.accounts = accounts;
     }
 
+    public Account getAccount(Long accountId){
+        try {
+            return accounts.stream().filter(account -> accountId == account.getAccountId()).collect(Collectors.toList()).get(0);
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
     public Long getUserId() {
         return userId;
     }
