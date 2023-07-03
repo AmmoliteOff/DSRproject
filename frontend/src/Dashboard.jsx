@@ -16,7 +16,7 @@ export default function Dashboard(props){
       const navigate = useNavigate();
     //const[debts, setDebts] = useState()
     const[isLoaded, setLoaded] = useState(false)
-    const[userInfo, setUserInfo] = useState([])
+    const[accountsInfo, setAccountsInfo] = useState([])
     const[popUpState, setPopUpState] = useState(false)
     const[usersToAdd, setUsersToAdd] = useState([])
     const[lastUserInfo, setLastUserInfo] = useState(null)
@@ -25,11 +25,11 @@ export default function Dashboard(props){
     const[nextUserContainerEnabled, setNextUserContainerEnabled] = useState(false)
 
     function loadUserInfo(){
-        axiosInstance.get("http://localhost:8080/api/getUserInfo")
+        axiosInstance.get("http://localhost:8080/api/accounts")
         .then(res=>{
             if(res.status === 200){
             
-                setUserInfo(res.data)
+                setAccountsInfo(res.data)
                 setLoaded(true)
             }
             else if(res.status === 401){
@@ -154,18 +154,18 @@ export default function Dashboard(props){
          <Box className = "dashboardContainer" sx={{width:"100%", height:"100vh"}}>
              <Header updateAuthStatus={props.updateAuthStatus}/>
              <Button onClick={changePopUpState}>Создать счёт</Button>
-                 <Card sx={{borderRadius: "20px", margin:'2%', boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
+                 {/* <Card sx={{borderRadius: "20px", margin:'2%', boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
                      <CardContent sx={{display:'flex', alignItems:'center'}}>
-                     {userInfo.totalDebt === 0?
+                     {accountsInfo.totalDebt === 0?
                      <Typography sx={{fontSize:'2.5vw'}}>Задолжностей нет!</Typography>:
         
-                     <Typography sx={{fontSize:'2.5vw'}}>Задолжность составляет <b>{userInfo.totalDebt}</b> ₽</Typography>
+                     <Typography sx={{fontSize:'2.5vw'}}>Задолжность составляет <b>{accountsInfo.totalDebt}</b> ₽</Typography>
                      }  
                  </CardContent>
-                 </Card>
+                 </Card> */}
 
              <React.Fragment>
-                 {userInfo.accounts.map(obj=>{
+                 {accountsInfo.map(obj=>{
                 
                      return (
                             <AccountCard key={obj.accountId} account={obj}/>
