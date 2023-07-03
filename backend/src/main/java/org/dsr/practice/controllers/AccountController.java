@@ -6,13 +6,15 @@ import org.dsr.practice.utils.JsonViews;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+//@CrossOrigin("http://localhost:3000")
 public class AccountController {
 
     AccountsService accountsService;
@@ -34,6 +36,17 @@ public class AccountController {
         var account = accountsService.getAccount(accountId);
         if(account!=null){
             return new ResponseEntity(account, HttpStatus.OK);
+        }
+        return new ResponseEntity(HttpStatus.NOT_FOUND);
+    }
+
+    @GetMapping("/api/accounts")
+    @JsonView(JsonViews.BasicDetails.class)
+    public ResponseEntity getAccounts(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        var accounts = accountsService.getAccounts(auth.getPrincipal().toString());
+        if(accounts!=null){
+            return new ResponseEntity(accounts, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.NOT_FOUND);
     }

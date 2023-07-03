@@ -14,7 +14,7 @@ public class BillInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private Long billInfoId;
 
     @ManyToOne
@@ -22,12 +22,12 @@ public class BillInfo {
     private Bill bill;
 
     @ManyToOne
-    @JsonSerialize(using = UserJsonSerializer.class)
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+//    @JsonSerialize(using = UserJsonSerializer.class)
+    @JsonView({JsonViews.BasicDetails.class})
     private User user;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private Long debt;
 
     public BillInfo() {

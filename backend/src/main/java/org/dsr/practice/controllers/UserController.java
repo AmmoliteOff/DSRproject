@@ -22,7 +22,7 @@ public class UserController {
         this.usersService = usersService;
     }
 
-    @JsonView(JsonViews.LimitedPublic.class)
+    @JsonView(JsonViews.BasicDetails.class)
     @GetMapping(value = "/api/getUserInfo")
     public ResponseEntity getUserInfo(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

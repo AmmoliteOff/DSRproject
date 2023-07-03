@@ -1,8 +1,10 @@
 package org.dsr.practice.models;
 
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
+import org.dsr.practice.utils.UserJsonSerializer;
 import org.dsr.practice.utils.generators.CodeGenerator;
 
 import java.util.List;
@@ -10,9 +12,6 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table( name = "users" )
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "userId", scope = JsonViews.OnlyForUser.class)
 public class User {
 
     @Id
@@ -22,15 +21,16 @@ public class User {
     private Long userId;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private String imgLink;
 
     @ManyToMany
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class})
     @JoinTable(
             name = "account_users",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "account_id"))
+//    @JsonView({JsonViews.ExtendedDetails.class})
+    @JsonIgnore
     private List<Account> accounts;
 
     @JsonIgnore
@@ -40,10 +40,10 @@ public class User {
     @Column
     private String code;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private String name;
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private String surname;
 
     @JsonIgnore

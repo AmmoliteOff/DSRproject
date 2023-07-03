@@ -43,7 +43,7 @@ public class PercentsBillSplitter implements BillSplitter {
 
             for (Long usrId : usersIn.keySet()) {
                 var usr = usersService.getUser(usrId);
-                BillInfo b = new BillInfo(bill, usr, fullPrice * (usersIn.get(usrId)/100)); //Создаём отдельный объект нового долга c учётом процентов
+                BillInfo b = new BillInfo(bill, usr, (fullPrice * usersIn.get(usrId))/10000); //Создаём отдельный объект нового долга c учётом процентов
                 billInfoService.Add(b);
             }
         }

@@ -1,8 +1,10 @@
 package org.dsr.practice.services.billspliter;
 
+import org.dsr.practice.models.Pairs;
 import org.dsr.practice.utils.PriceConverter;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Map;
 
 public class BillSplitData {
@@ -62,7 +64,7 @@ public class BillSplitData {
         return usersMap;
     }
 
-    public void setUsersMap(Map<Long, Double> usersMap) {
+    public void setUsersMap(List<Pairs> usersMap) {
         this.usersMap = PriceConverter.convert(usersMap);
     }
 }

@@ -2,8 +2,10 @@ package org.dsr.practice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.*;
 import org.dsr.practice.utils.JsonViews;
+import org.dsr.practice.utils.UserJsonSerializer;
 
 import java.util.HashSet;
 import java.util.List;
@@ -15,26 +17,26 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private Long accountId;
 
     @OneToMany(mappedBy = "account")
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private List<Bill> bills;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private String title;
 
     @Column
-    @JsonView({JsonViews.Public.class, JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
+    @JsonView({JsonViews.BasicDetails.class})
     private String description;
 
     @ManyToMany(mappedBy = "accounts")
-    @JsonView({JsonViews.Public.class,JsonViews.LimitedPublic.class, JsonViews.OnlyForUser.class, JsonViews.BasicDetails.class})
-    private Set<User> users;
+    @JsonView({JsonViews.BasicDetails.class})
+    private List<User> users;
 
-    public Account(String title, String description, Set<User> users) {
+    public Account(String title, String description, List<User> users) {
         this.accountId = null;
         this.title = title;
         this.users = users;
@@ -85,11 +87,11 @@ public class Account {
         this.description = description;
     }
 
-    public Set<User> getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
-    public void setUsers(Set<User> users) {
+    public void setUsers(List<User> users) {
         this.users = users;
     }
 }

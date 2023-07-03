@@ -6,7 +6,9 @@ import org.dsr.practice.repos.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -26,8 +28,12 @@ public class  AccountsService {
         return accountRepository.findByAccountId(id);
     }
 
+    public List<Account> getAccounts(String username){
+        return usersService.getUser(username).getAccounts();
+    }
+
     public boolean createAccount(String title, String description, String[] users) {
-        Set<User> usersIn = new HashSet<User>();
+        List<User> usersIn = new ArrayList<>();
         try {
             for (String str : users) {
                 var usr = usersService.getUser(Long.parseLong(str));
