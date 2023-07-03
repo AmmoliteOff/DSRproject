@@ -31,7 +31,7 @@ public class AccountController {
     }
 
     @GetMapping("/api/account")
-    @JsonView(JsonViews.LimitedPublic.class)
+    @JsonView(JsonViews.BasicDetails.class)
     public ResponseEntity getAccount(@RequestParam(name = "accountId") Long accountId){
         var account = accountsService.getAccount(accountId);
         if(account!=null){
