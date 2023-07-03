@@ -1,20 +1,32 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate} from "react-router-dom"
 import React from "react"
 import BillCard from "./BillCard"
-import { Box, Dialog, DialogTitle, Button, Typography, Input, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel} from "@mui/material"
+import { Box, Dialog, DialogTitle, Button, Input, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, Typography} from "@mui/material"
 import axios from "axios"
 import Header from "./Header"
+import UserLabel from "./UserLabel"
 
 export default function Account(props){
 
+    const navigate = useNavigate();
     const[accountInfo, setAccountInfo] = useState()
     const[isLoaded, setLoaded] = useState(false)
     const {id} = useParams()
     const[popUpState, setPopUpState] = useState(false)
+    const[fullPrice, setFullPrice] = useState(0)
     const[title, setTitle] = useState("")
     const[description, setDescription] = useState("")
+    const[paymentMap, setPaymentMap] = useState([])
     const[chosenType, setChosenType] = useState(0)
+    const[lastFullPrice, setLastFullPrice] = useState("")
+    const[buttonEnabled, setButtonEnabled] = useState(false)
+
+    function isNumeric(str) {
+        if (typeof str != "string") return false
+        return !isNaN(str) &&
+               !isNaN(parseFloat(str))
+      }
 
     const axiosInstance = axios.create({
         withCredentials: true
@@ -34,14 +46,72 @@ export default function Account(props){
     }
 
     function typeChanged(event){
-        setChosenType(event.target.value)
+        setFullPrice(0)
+        setPaymentMap([])
+        validateForm()
+        setChosenType(parseInt(event.target.value))
+    }
+
+    function updatePrice(){
+        var res = 0
+        for(let i = 0; i<paymentMap.length; i++){
+            res+=paymentMap[i].debt
+        }
+        setFullPrice(res)
+        validateForm()
+    }
+
+    function validateForm(){
+        if(chosenType !== 0){
+            if(title!=="" && description!=="" && fullPrice!=0){
+                if(paymentMap.length === accountInfo.users.length){
+                    if(chosenType!==1)
+                    setButtonEnabled(true)
+                    else{
+                        var sum = 0
+                        for(let i=0; i<paymentMap.length; i++){
+                            sum+=paymentMap[i].debt
+                        }
+                        if(sum === 100){
+                            setButtonEnabled(true)
+                        }
+                        else{
+                            setButtonEnabled(false)
+                        }
+                    }
+                }
+                else{
+                    setButtonEnabled(false)
+                }
+            }
+            else{
+                setButtonEnabled(false)
+            }
+        }
+        else{
+            if(title!=="" && description!=="" && fullPrice!=0){
+                if(paymentMap.length === 0){
+                    var c = []
+                    for(let i=0; i<accountInfo.users.length; i++){
+                        c.push({id:accountInfo.users[i].userId, debt:fullPrice/accountInfo.users.length})
+                    }
+                    setPaymentMap(c)
+                }
+                setButtonEnabled(true)
+            }
+            else{
+                setButtonEnabled(false)
+            }
+        }
     }
 
     useEffect(()=>{
+        validateForm()
+
         if(!isLoaded){
             produceAccountBillsLoad()
         }
-    }, [])
+    }, [chosenType, title, description, fullPrice, paymentMap])
 
     function updateDescription(event){
         setDescription(event.target.value)
@@ -51,9 +121,48 @@ export default function Account(props){
         setTitle(event.target.value)
     }
 
+    function changeFullPrice(event){
+        if(isNumeric(event.target.value)){
+            setFullPrice(event.target.value)
+            setLastFullPrice(event.target.value)
+        }
+        else{
+            if(event.target.value!=="")
+                event.target.value = lastFullPrice
+            else
+                setLastFullPrice(event.target.value)
+        }
+    }
+
+    function createBill(){
+
+        let usersMapStr = ""
+
+        for(let i = 0; i<paymentMap.length; i++){
+            if(i!=paymentMap.length-1)
+            usersMapStr+=paymentMap[i].id+":"+paymentMap[i].debt+","
+            else
+            usersMapStr+=paymentMap[i].id+":"+paymentMap[i].debt
+        }
+
+        console.log(usersMapStr)
+
+        axiosInstance.post("http://localhost:8080/api/createBill", null,JSON.stringify({
+            title: title,
+            description: description,
+            fullPrice: fullPrice,
+            accountId: accountInfo.accountId,
+            type: chosenType,
+            usersMap: usersMapStr
+        }), {headers: {
+            'Content-Type': 'application/json'
+          }})
+    }
+
     return(
         <React.Fragment>
-
+{isLoaded?
+        <React.Fragment>
 <Dialog onClose={changePopUpState} open={popUpState}>          
                 <DialogTitle>Создание траты</DialogTitle>
                 <Box width={"60vw"} height={"50vh"}>
@@ -75,9 +184,14 @@ export default function Account(props){
                             <FormControlLabel value={2} control={<Radio />} label="Вручную" />
                         </RadioGroup>
                         </FormControl>
+                        {chosenType!==2?<Input onChange={changeFullPrice} placeholder="Полная сумма"/>:<Typography>Полная сумма: {fullPrice}</Typography>}
+                        {accountInfo.users.map(user=>{
+                            return(<UserLabel fullPrice = {fullPrice} key = {user.userId} user={user} type={chosenType} paymentState = {paymentMap} paymentSetter={setPaymentMap} updatePrice={updatePrice}/>
 
+                            )
+                        })}
                     </Box>
-                        <Button >Создать трату</Button>
+                        <Button disabled={!buttonEnabled} onClick={createBill}>Создать трату</Button>
                 </Box>
             </Dialog>
 
@@ -94,6 +208,7 @@ export default function Account(props){
             </React.Fragment>
                 :null}
           </Box>
+        </React.Fragment>:null}
         </React.Fragment>
     )
 }

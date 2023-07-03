@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { Routes, Route, Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import { Box, Button, Card, CardContent, Typography, Dialog, DialogTitle, Input, Avatar} from "@mui/material";
 import React from "react";
@@ -13,6 +13,7 @@ export default function Dashboard(props){
     const axiosInstance = axios.create({
         withCredentials: true
       })
+      const navigate = useNavigate();
     //const[debts, setDebts] = useState()
     const[isLoaded, setLoaded] = useState(false)
     const[userInfo, setUserInfo] = useState([])
@@ -81,12 +82,17 @@ export default function Dashboard(props){
                 userInAccount+=usersToAdd[i].userId
         }
 
+        console.log(userInAccount)
 
         axiosInstance.post("http://localhost:8080/api/createAccount", null, { params:{
             title: title,
             description: description,
             users: userInAccount
-        }})
+        }}).then((res)=>{
+            if(res.status === 200){
+                navigate(0)
+            }
+        })
     }
 
     function addUser(){
