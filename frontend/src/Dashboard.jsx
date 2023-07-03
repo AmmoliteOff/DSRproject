@@ -90,7 +90,7 @@ export default function Dashboard(props){
             users: userInAccount
         }}).then((res)=>{
             if(res.status === 200){
-                navigate(0)
+                //navigate(0)
             }
         })
     }

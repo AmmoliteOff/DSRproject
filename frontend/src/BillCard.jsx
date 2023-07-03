@@ -10,7 +10,7 @@ export default function BillCard(props){
             <Typography sx={{fontSize:'1.8vw'}}>{billInfo.description}</Typography>
         </CardContent>
         <CardContent>
-           <Typography sx={{fontSize:'2.5vw', textAlign:'end'}}><b>Общий долг: {billInfo.fullPrice/100.0}</b> ₽</Typography>
+           <Typography sx={{fontSize:'2.5vw', textAlign:'end'}}><b>Общий долг: {billInfo.fullPrice}</b> ₽</Typography>
             {/* {debtInfo.total!==0?<Typography sx={{fontSize:'1.8vw', color:"gray", textAlign:'end'}}>Ваша неоплаченная часть: {debtInfo.total} ₽</Typography>:
             <Typography sx={{fontSize:'1.8vw', color:"gray", textAlign:'end'}}>Ваша часть выплачена</Typography>} */}
         </CardContent>

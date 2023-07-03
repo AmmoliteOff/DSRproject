@@ -29,7 +29,8 @@ export default function Account(props){
       }
 
     const axiosInstance = axios.create({
-        withCredentials: true
+        withCredentials: true,
+        headers:{'Content-Type': 'application/json'}
     })
 
     function produceAccountBillsLoad(){
@@ -136,27 +137,25 @@ export default function Account(props){
 
     function createBill(){
 
-        let usersMapStr = ""
+        let usersMap = []
+        paymentMap.forEach(element => {
+            usersMap.push({userId: element.id, debt: element.debt})
+        });
 
-        for(let i = 0; i<paymentMap.length; i++){
-            if(i!=paymentMap.length-1)
-            usersMapStr+=paymentMap[i].id+":"+paymentMap[i].debt+","
-            else
-            usersMapStr+=paymentMap[i].id+":"+paymentMap[i].debt
-        }
-
-        console.log(usersMapStr)
-
-        axiosInstance.post("http://localhost:8080/api/createBill", null,JSON.stringify({
+        let data={
             title: title,
             description: description,
-            fullPrice: fullPrice,
-            accountId: accountInfo.accountId,
             type: chosenType,
-            usersMap: usersMapStr
-        }), {headers: {
-            'Content-Type': 'application/json'
-          }})
+            fullPrice: fullPrice,
+            accountId: accountInfo.accountId, 
+            usersMap: usersMap,
+        }
+
+        axiosInstance.post("http://localhost:8080/api/createBill", data).then(res=>{
+            if(res.status === 200){
+                //navigate(0)
+            }
+        })
     }
 
     return(
