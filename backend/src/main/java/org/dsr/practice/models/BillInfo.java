@@ -64,7 +64,8 @@ public class BillInfo {
     }
 
     public Long getDebt() {
-        return debt;
+        return
+                debt/100;
     }
 
     public void setDebt(Long debt) {

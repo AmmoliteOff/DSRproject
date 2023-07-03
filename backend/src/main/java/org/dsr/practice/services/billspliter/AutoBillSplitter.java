@@ -2,6 +2,7 @@ package org.dsr.practice.services.billspliter;
 
 import org.dsr.practice.models.Bill;
 import org.dsr.practice.models.BillInfo;
+import org.dsr.practice.models.BillSplitData;
 import org.dsr.practice.models.User;
 import org.dsr.practice.services.AccountsService;
 import org.dsr.practice.services.BillInfoService;

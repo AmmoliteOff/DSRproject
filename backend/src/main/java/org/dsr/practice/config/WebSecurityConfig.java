@@ -66,8 +66,10 @@ public class WebSecurityConfig implements WebMvcConfigurer{
         var configuration = new CorsConfiguration();
         configuration.setAllowCredentials(true);
         configuration.addAllowedOrigin(frontendUrl);
-        configuration.addAllowedMethod(HttpMethod.OPTIONS);
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST"));
+        configuration.addAllowedHeader("Access-Control-Request-Headers");
+        configuration.addAllowedHeader("Content-Type");
+        configuration.addAllowedHeader("Access-Control-Request-Method");
+        configuration.setAllowedMethods(Arrays.asList( "GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }

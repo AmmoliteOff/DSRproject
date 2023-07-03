@@ -2,6 +2,7 @@ package org.dsr.practice.services.billspliter;
 
 import org.dsr.practice.models.Bill;
 import org.dsr.practice.models.BillInfo;
+import org.dsr.practice.models.BillSplitData;
 import org.dsr.practice.services.AccountsService;
 import org.dsr.practice.services.BillInfoService;
 import org.dsr.practice.services.BillsService;
@@ -42,7 +43,7 @@ public class PercentsBillSplitter implements BillSplitter {
 
             for (Long usrId : usersIn.keySet()) {
                 var usr = usersService.getUser(usrId);
-                BillInfo b = new BillInfo(bill, usr, usersIn.get(usrId)); //Создаём отдельный объект нового долга c учётом процентов
+                BillInfo b = new BillInfo(bill, usr, fullPrice * (usersIn.get(usrId)/100)); //Создаём отдельный объект нового долга c учётом процентов
                 billInfoService.Add(b);
             }
         }

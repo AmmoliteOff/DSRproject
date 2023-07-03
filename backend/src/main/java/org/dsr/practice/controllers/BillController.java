@@ -1,5 +1,6 @@
 package org.dsr.practice.controllers;
 
+import org.dsr.practice.models.BillSplitData;
 import org.dsr.practice.services.billspliter.*;
 import org.dsr.practice.services.BillsService;
 import org.springframework.beans.factory.annotation.Autowired;
