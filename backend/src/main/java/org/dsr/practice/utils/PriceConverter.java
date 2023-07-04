@@ -14,4 +14,8 @@ public class PriceConverter {
         }
         return result;
     }
+
+    public static Long convert(Double value){
+        return Double.valueOf(value*100).longValue();
+    }
 }

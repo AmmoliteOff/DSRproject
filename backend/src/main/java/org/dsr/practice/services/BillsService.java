@@ -2,10 +2,14 @@ package org.dsr.practice.services;
 
 import org.dsr.practice.models.Account;
 import org.dsr.practice.models.Bill;
+import org.dsr.practice.models.BillInfo;
 import org.dsr.practice.models.User;
 import org.dsr.practice.repos.BillRepository;
+import org.dsr.practice.utils.PriceConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class BillsService {
@@ -44,6 +48,27 @@ public class BillsService {
 
     public BillInfoService getBillInfoService() {
         return billInfoService;
+    }
+
+    public boolean Repayment(String pr, Long accountId, Long billId, Double value){
+        try {
+            var billInfo = usersService
+                    .getUser(pr)
+                    .getBillInfos()
+                    .stream()
+                    .filter(billInfoObj -> billInfoObj.getBill().getBillId() == billId && billInfoObj.getBill().getAccount().getAccountId() == accountId)
+                    .collect(Collectors.toList())
+                    .get(0);
+            billInfo.setDebt(billInfo.getRawDebt() - PriceConverter.convert(value));
+            if(billInfo.getRawDebt()<0){
+                billInfo.setDebt(0L);
+            }
+            billInfoService.Add(billInfo);
+        }
+        catch (Exception e){
+            return false;
+        }
+        return true;
     }
 
     public AccountsService getAccountsService() {

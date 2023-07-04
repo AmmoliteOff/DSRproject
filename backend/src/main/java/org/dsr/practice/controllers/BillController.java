@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 public class BillController {
 
@@ -32,6 +34,19 @@ public class BillController {
         else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
+    }
+
+    @PostMapping("/api/repayment")
+    public ResponseEntity repayment(@RequestBody Map<String, Object> requestBody) {
+        Long accountId = Long.valueOf(requestBody.get("accountId").toString());
+        Long billId = Long.valueOf(requestBody.get("billId").toString());
+        Double value = Double.valueOf(requestBody.get("value").toString());
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (billsService.Repayment(auth.getPrincipal().toString(), accountId, billId, value))
+            return new ResponseEntity(HttpStatus.OK);
+        else
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/api/createBill")

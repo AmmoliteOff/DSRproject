@@ -90,6 +90,14 @@ public class User {
 //    }
 
 
+    public List<BillInfo> getBillInfos() {
+        return billInfos;
+    }
+
+    public void setBillInfos(List<BillInfo> billInfos) {
+        this.billInfos = billInfos;
+    }
+
     public List<Account> getAccounts() {
         return accounts;
     }

@@ -12,6 +12,7 @@ public class Bill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, unique = true)
+    @JsonView({JsonViews.BasicDetails.class})
     private Long billId;
 
     @ManyToOne
@@ -30,6 +31,9 @@ public class Bill {
     @JsonView({JsonViews.BasicDetails.class})
     private Long fullPrice;
 
+    @Column
+    @JsonView({JsonViews.BasicDetails.class})
+    private Long owed;
     @OneToMany(mappedBy = "bill")
     @JsonView(JsonViews.ExtendedDetails.class)
     private List<BillInfo> billInfo;
@@ -50,6 +54,22 @@ public class Bill {
         this.title = title;
         this.description = description;
         this.fullPrice = fullPrice;
+    }
+
+    public Long getOwed() {
+        var res = 0L;
+        for(int i = 0; i<billInfo.size(); i++){
+            res+=billInfo.get(i).getDebt();
+        }
+        return res;
+    }
+
+    public void setOwed(Long owed) {
+        var res = 0L;
+        for(int i = 0; i<billInfo.size(); i++){
+            res+=billInfo.get(i).getRawDebt();
+        }
+        this.owed = res;
     }
 
     public Long getFullPrice() {

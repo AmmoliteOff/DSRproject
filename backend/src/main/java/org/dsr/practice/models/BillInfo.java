@@ -68,6 +68,10 @@ public class BillInfo {
                 debt/100;
     }
 
+    public Long getRawDebt(){
+        return debt;
+    }
+
     public void setDebt(Long debt) {
         this.debt = debt;
     }
