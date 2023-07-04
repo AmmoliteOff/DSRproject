@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react"
 import { useParams, useNavigate} from "react-router-dom"
 import React from "react"
-import BillCard from "./BillCard"
+import BillCard from "../Bill/BillCard"
 import { Box, Dialog, DialogTitle, Button, Input, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, Typography} from "@mui/material"
 import axios from "axios"
-import Header from "./Header"
-import UserLabel from "./UserLabel"
+import Header from "../Utils/Header"
+import UserLabel from "../Utils/UserLabel"
+import { BACKEND_API_URL } from "../Utils/constants"
 
 export default function Account(props){
 
@@ -34,7 +35,7 @@ export default function Account(props){
     })
 
     function produceAccountBillsLoad(){
-        axiosInstance.get("http://localhost:8080/api/account", { params: { accountId: id } }).then(res=>{
+        axiosInstance.get(BACKEND_API_URL+"/api/account", { params: { accountId: id } }).then(res=>{
             if(res.status === 200){
                 setAccountInfo(res.data)
                 setLoaded(true)
@@ -150,10 +151,9 @@ export default function Account(props){
             accountId: accountInfo.accountId, 
             usersMap: usersMap,
         }
-
-        axiosInstance.post("http://localhost:8080/api/createBill", data).then(res=>{
+        axiosInstance.post(BACKEND_API_URL+"/api/createBill", data).then(res=>{
             if(res.status === 200){
-                //navigate(0)
+                navigate(0)
             }
         })
     }
@@ -201,7 +201,7 @@ export default function Account(props){
             <React.Fragment>
                 {accountInfo.bills.map(obj=>{
                     return(
-                        <BillCard key={obj.billId} bill={obj}/>
+                        <BillCard useLink = {true} key={obj.billId} billInfo={obj}/>
                     )
                 })}
             </React.Fragment>

@@ -1,6 +1,6 @@
 import { Box, Typography, Avatar } from "@mui/material"
- import React from "react"
-import BillDivederField from "./BillDividerField"
+import React from "react"
+import BillDivederField from "../Bill/BillDividerField"
 
 export default function UserLabel(props){
     let user = props.user

@@ -2,6 +2,7 @@ import axios from "axios"
 import {useEffect, useState} from "react"
 import styled from "@emotion/styled";
 import { Box, Button, TextField, Typography} from "@mui/material";
+import { BACKEND_API_URL } from "./constants";
 
 export default function Auth(props){
     const[emailInputError, setEmailInputError] = useState(false)
@@ -22,7 +23,7 @@ export default function Auth(props){
 
     function produceAuth(){
         var code = document.getElementById("codeInput").value
-            axiosInstance.post("http://localhost:8080/login", null, {params:{ 
+            axiosInstance.post(BACKEND_API_URL+"/login", null, {params:{ 
         email,
         code,
         "remember-me": true
@@ -45,7 +46,7 @@ export default function Auth(props){
     if(localEmail.includes("@")){
         setEmailInputError(false);
         setEmail(localEmail)
-        axiosInstance.post("http://localhost:8080/auth/sendCode", null, {params:{ 
+        axiosInstance.post(BACKEND_API_URL+"/auth/sendCode", null, {params:{ 
                 email: localEmail
         }}).then(res=>{
             if(res.status === 200){

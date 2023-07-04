@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useState } from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import { Box, Button, Card, CardContent, Typography, Dialog, DialogTitle, Input, Avatar} from "@mui/material";
+import { Box, Button, Typography, Dialog, DialogTitle, Input, Avatar} from "@mui/material";
 import React from "react";
-import Account from "./Account";
-import AccountCard from "./AccountCard";
-import Header from "./Header";
+import AccountCard from "./Account/AccountCard";
+import Header from "./Utils/Header";
+import { BACKEND_API_URL } from "./Utils/constants";
 
 export default function Dashboard(props){
 
@@ -25,7 +25,7 @@ export default function Dashboard(props){
     const[nextUserContainerEnabled, setNextUserContainerEnabled] = useState(false)
 
     function loadUserInfo(){
-        axiosInstance.get("http://localhost:8080/api/accounts")
+        axiosInstance.get(BACKEND_API_URL+"/api/accounts")
         .then(res=>{
             if(res.status === 200){
             
@@ -57,7 +57,7 @@ export default function Dashboard(props){
     function fetchUser(event){
         if(usersToAdd.filter(user => user.userId == event.target.value).length === 0){
             if(event.target.value!=""){
-            axiosInstance.get("http://localhost:8080/api/fetchUser", {params:{
+            axiosInstance.get(BACKEND_API_URL+"/api/fetchUser", {params:{
                 userId: event.target.value
             }}).then(res=>{
                 setLastUserInfo(res.data)
@@ -84,7 +84,7 @@ export default function Dashboard(props){
 
         console.log(userInAccount)
 
-        axiosInstance.post("http://localhost:8080/api/createAccount", null, { params:{
+        axiosInstance.post(BACKEND_API_URL+"api/createAccount", null, { params:{
             title: title,
             description: description,
             users: userInAccount

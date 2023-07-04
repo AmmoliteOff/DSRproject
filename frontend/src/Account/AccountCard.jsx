@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, CardActionArea} from "@mui/material";
+import { Box, Card, CardContent, Typography, CardActionArea, Avatar, AvatarGroup} from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function AccountCard(props){
@@ -12,9 +12,13 @@ export default function AccountCard(props){
                 <Typography sx={{fontSize:'1.8vw'}}>{accountInfo.description}</Typography>
             </CardContent>
             <CardContent>
-                {/* <Typography sx={{fontSize:'2.5vw', textAlign:'end'}}><b>Общий долг: {billInfo.debtPrice}</b> ₽</Typography>
-                {debtInfo.total!==0?<Typography sx={{fontSize:'1.8vw', color:"gray", textAlign:'end'}}>Ваша неоплаченная часть: {debtInfo.total} ₽</Typography>:
-                <Typography sx={{fontSize:'1.8vw', color:"gray", textAlign:'end'}}>Ваша часть выплачена</Typography>} */}
+                            <AvatarGroup max={5}>
+                                {accountInfo.users.map(user=>{
+                                    return(
+                                        <Avatar key = {user.userId} alt={user.name+" "+user.surname} src={user.imgLink} />
+                                    )
+                                })}
+                </AvatarGroup>
             </CardContent>
         </CardActionArea>
     </Card>

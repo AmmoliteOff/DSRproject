@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
-import Auth from "./Auth";
 import React from "react";
 import { Route, Routes, useNavigate} from "react-router-dom";
 import Dashboard from "./Dashboard";
-import Account from "./Account";
+import Account from "./Account/Account";
+import Auth from "./Utils/Auth";
 import axios from "axios";
+
+import Bill from "./Bill/Bill";
 
 function App() {
 
@@ -47,9 +49,10 @@ function App() {
 
   return (
      <Routes>
-             <Route path="/dashboard/*" element={<Dashboard updateAuthStatus = {updateAuthStatus}/>}/>
+             <Route index path="/dashboard/*" element={<Dashboard updateAuthStatus = {updateAuthStatus}/>}/>
              <Route path="/login" element={<Auth updateAuthStatus = {updateAuthStatus}/>}/>
              <Route path="/dashboard/account/:id" element={<Account updateAuthStatus = {updateAuthStatus}/>}/>
+             <Route path="/dashboard/account/:accountId/bill/:billId" element={<Bill updateAuthStatus = {updateAuthStatus}/>}/>
      </Routes>
   )
 }

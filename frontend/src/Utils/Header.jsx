@@ -4,6 +4,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import axios from "axios";
 import { useEffect, useState } from "react";
 import React from "react";
+import { BACKEND_API_URL } from "./constants";
 
 export default function Header(props){
 
@@ -15,10 +16,13 @@ export default function Header(props){
     })
 
     function produceHeaderLoad(){
-        axiosInstance.get("http://localhost:8080/api/getUserInfo").then(res=>{
+        axiosInstance.get(BACKEND_API_URL+"/api/getUserInfo").then(res=>{
             if(res.status === 200){
                 setUserInfo(res.data)
                 setLoaded(true)
+                console.log(res.data.userId)
+                if(!!props.updateUserId)
+                    props.updateUserId(res.data.userId)
             }
         })
     }
@@ -26,7 +30,6 @@ export default function Header(props){
     function produceLogout(){
         axiosInstance.post("http://localhost:8080/logout").then(res=>{
             if(res.status === 200){
-                console.log(props.updateAuthStatus)
             props.updateAuthStatus(false)
         }})
     }
