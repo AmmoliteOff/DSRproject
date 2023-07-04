@@ -20,6 +20,14 @@ public class UsersService {
         return userRepository.findByEmail(pr.replaceAll(" ", ""));
     }
 
+    public void setSettings(String pr, String name, String surname, String imgLink){
+        User user = getUser(pr);
+        user.setName(name);
+        user.setSurname(surname);
+        user.setImgLink(imgLink);
+        Update(user);
+    }
+
     public void Update(User user){
         userRepository.save(user);
     }

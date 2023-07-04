@@ -75,6 +75,7 @@ public class User {
     }
 
     public User(String email) {
+        this.userId = null;
         this.role = "USER";
         this.code = CodeGenerator.getNewCode();
         this.email = email;

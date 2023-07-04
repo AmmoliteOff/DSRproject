@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -28,6 +28,16 @@ public class UserController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = usersService.getUser(auth.getPrincipal().toString());
         return new ResponseEntity(user, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/settings")
+    public ResponseEntity setUserSettings(@RequestBody Map<String, Object> requestBody){
+        var name = requestBody.get("name").toString();
+        var surname = requestBody.get("surname").toString();
+        var imgLink = requestBody.get("imgLink").toString();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        usersService.setSettings(auth.getPrincipal().toString(), name, surname, imgLink);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @JsonView(JsonViews.BasicDetails.class)
