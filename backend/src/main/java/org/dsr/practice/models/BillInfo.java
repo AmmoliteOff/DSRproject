@@ -63,9 +63,8 @@ public class BillInfo {
         this.user = user;
     }
 
-    public Long getDebt() {
-        return
-                debt/100;
+    public Double getDebt() {
+        return debt/100.0;
     }
 
     public Long getRawDebt(){

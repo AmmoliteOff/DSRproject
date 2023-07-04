@@ -1,9 +1,11 @@
 package org.dsr.practice.models;
 
+import java.math.BigDecimal;
+
 public class Pairs {
 
     private Long userId;
-    private Double debt;
+    private BigDecimal debt;
 
     public Pairs() {
     }
@@ -16,11 +18,11 @@ public class Pairs {
         this.userId = userId;
     }
 
-    public Double getDebt() {
+    public BigDecimal getDebt() {
         return debt;
     }
 
-    public void setDebt(Double debt) {
+    public void setDebt(BigDecimal debt) {
         this.debt = debt;
     }
 }

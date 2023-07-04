@@ -48,8 +48,10 @@ public class BillSplitData {
         return fullPrice;
     }
 
-    public void setFullPrice(Double fullPrice) {
-        this.fullPrice = Double.valueOf(fullPrice*100).longValue();
+    public void setFullPrice(BigDecimal fullPrice) {
+        BigDecimal multipliedValue = fullPrice.multiply(new BigDecimal("100"));
+        long longValue = multipliedValue.longValue();
+        this.fullPrice = longValue;
     }
 
     public Long getAccountId() {

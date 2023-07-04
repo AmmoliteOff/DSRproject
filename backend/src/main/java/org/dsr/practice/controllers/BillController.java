@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @RestController
@@ -40,7 +41,7 @@ public class BillController {
     public ResponseEntity repayment(@RequestBody Map<String, Object> requestBody) {
         Long accountId = Long.valueOf(requestBody.get("accountId").toString());
         Long billId = Long.valueOf(requestBody.get("billId").toString());
-        Double value = Double.valueOf(requestBody.get("value").toString());
+        BigDecimal value = new BigDecimal(requestBody.get("value").toString());
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (billsService.Repayment(auth.getPrincipal().toString(), accountId, billId, value))

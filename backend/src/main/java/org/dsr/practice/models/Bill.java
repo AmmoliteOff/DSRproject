@@ -56,8 +56,8 @@ public class Bill {
         this.fullPrice = fullPrice;
     }
 
-    public Long getOwed() {
-        var res = 0L;
+    public Double getOwed() {
+        var res = 0.0;
         for(int i = 0; i<billInfo.size(); i++){
             res+=billInfo.get(i).getDebt();
         }
@@ -72,8 +72,8 @@ public class Bill {
         this.owed = res;
     }
 
-    public Long getFullPrice() {
-        return fullPrice/100;
+    public Double getFullPrice() {
+        return fullPrice/100.0;
     }
 
     public void setFullPrice(Long fullPrice) {
