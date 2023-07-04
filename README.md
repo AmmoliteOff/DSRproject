@@ -4,11 +4,12 @@
 ## Frontend:
 Для сборки и запуска frontend части проекта:
 1. Скопировать проект с GitHub
-2. Перейти в папку `frontend`
-3. `npm run build`
-4. `cd build`
-5. `npm install -g serve`
-6. `serve -s build`
+2. Установить Node Js в систему
+3. Перейти в папку `frontend`
+4. `npm run build`
+5. `cd build`
+6. `npm install -g serve`
+7. `serve -s build`
 
 ## Backend:
 Необходимо создать базу данный postgress. Настройка БД происходит в application.properties.
