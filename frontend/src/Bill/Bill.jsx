@@ -7,6 +7,7 @@ import { BACKEND_API_URL } from "../Utils/constants";
 import BillCard from "./BillCard";
 import BillInfoTable from "./BillInfoTable";
 import React from "react"
+import BackButton from "../Utils/BackButton";
 
 export default function Bill(props){
 
@@ -103,6 +104,7 @@ export default function Bill(props){
             <Header updateUserId = {setUserId} updateAuthStatus={props.updateAuthStatus}/>
             {isLoaded?
             <React.Fragment>
+                <BackButton/>
                 <BillCard billInfo={billData}/>
                 <Card sx={{borderRadius: "20px", marginTop:"2%", margin:"2%", boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
                     <Box sx={{width:'100%', display: 'flex', justifyContent: 'space-between'}}>

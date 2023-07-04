@@ -50,7 +50,7 @@ export default function BillDivederField(props){
     }
 
     function percentChange(event){
-        let val = parseInt(event.target.value)
+        let val = parseFloat(event.target.value)
         let upperBond = 100
         console.log(props.paymentState)
         if(props.paymentState.length!==0){

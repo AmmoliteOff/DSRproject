@@ -7,6 +7,7 @@ import axios from "axios"
 import Header from "../Utils/Header"
 import UserLabel from "../Utils/UserLabel"
 import { BACKEND_API_URL } from "../Utils/constants"
+import BackButton from "../Utils/BackButton"
 
 export default function Account(props){
 
@@ -196,6 +197,7 @@ export default function Account(props){
 
           <Box className = "accountContainer" sx={{width:"100%", height:"100vh"}}>
             <Header updateAuthStatus={props.updateAuthStatus}/>
+            <BackButton/>
             <Button onClick={changePopUpState}>Создать трату</Button>
             {isLoaded?
             <React.Fragment>
