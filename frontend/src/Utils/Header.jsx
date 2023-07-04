@@ -1,6 +1,7 @@
 import { Avatar, Box, Typography } from "@mui/material"
 import IconButton from '@mui/material/IconButton';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {useNavigate} from "react-router-dom"
 import axios from "axios";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -10,6 +11,7 @@ export default function Header(props){
 
     const[isLoaded, setLoaded] = useState(false)
     const[userInfo, setUserInfo] = useState([])
+    const navigate = useNavigate()
 
     const axiosInstance = axios.create({
         withCredentials: true
@@ -18,6 +20,9 @@ export default function Header(props){
     function produceHeaderLoad(){
         axiosInstance.get(BACKEND_API_URL+"/api/getUserInfo").then(res=>{
             if(res.status === 200){
+                if(res.data.name === null || res.data.surname === null){
+                    navigate("/settings")
+                }
                 setUserInfo(res.data)
                 setLoaded(true)
                 console.log(res.data.userId)

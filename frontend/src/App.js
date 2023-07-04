@@ -5,6 +5,7 @@ import Dashboard from "./Dashboard";
 import Account from "./Account/Account";
 import Auth from "./Utils/Auth";
 import axios from "axios";
+import UserSettings from "./Utils/UserSettings";
 
 import Bill from "./Bill/Bill";
 
@@ -53,6 +54,7 @@ function App() {
              <Route path="/login" element={<Auth updateAuthStatus = {updateAuthStatus}/>}/>
              <Route path="/dashboard/account/:id" element={<Account updateAuthStatus = {updateAuthStatus}/>}/>
              <Route path="/dashboard/account/:accountId/bill/:billId" element={<Bill updateAuthStatus = {updateAuthStatus}/>}/>
+             <Route path="/settings" element={<UserSettings/>}/>
      </Routes>
   )
 }
