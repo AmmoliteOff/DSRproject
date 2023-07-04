@@ -1,0 +1,40 @@
+name: DSR_summer_project
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Set application properties
+        run: cd backend && sed -i "s/MAIL_USERNAME/${{ secrets.MAIL_USERNAME}}/g; s/MAIL_PASSWORD/${{ secrets.MAIL_PASSWORD }}/g; s/HOST/${{ secrets.MAIL_HOST}}/g; s/PORT/${{ secrets.MAIL_PORT}}/g" src/main/resources/application.properties
+
+      - name: Build Backend
+        run: cd backend && mvn -B package --file pom.xml
+
+      - name: Build Frontend
+        run: cd frontend && npm install && npm run build
+
+      - name: Upload Backend Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: BackendArtifact
+          path: backend/target/DSRproject.jar
+
+      - name: Upload Frontend Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: FrontendArtifact
+          path: frontend/build
