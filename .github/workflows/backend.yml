@@ -23,3 +23,10 @@ jobs:
 
       - name: Build with Maven
         run: cd backend && mvn -B package --file pom.xml
+        
+      - name: Save JAR artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: DSRproject
+          path: backend/target/DSRproject.jar
+
