@@ -1,0 +1,14 @@
+version: "3"
+services:
+  backend:
+    build: backend/
+    command: java -jar backend
+    ports:
+      - 8080:8080
+      
+  frontend:
+    build: frontend/
+    command: npm run start
+    network_mode: host
+    depends_on:
+      - server
