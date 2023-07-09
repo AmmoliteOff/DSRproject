@@ -1,14 +1,12 @@
-FROM adoptopenjdk:17-jdk-hotspot
+FROM maven:3.8.3-openjdk-17 AS build
+COPY src /home/app/src
+COPY pom.xml /home/app
+RUN mvn -f /home/app/pom.xml clean package
 
-# Устанавливаем рабочую директорию внутри контейнера
-WORKDIR /src
-
-# Копируем исходный код проекта внутрь контейнера
-COPY src ./src
-
-# Собираем проект с помощью Maven
-RUN mvn -B package --file pom.xml
-
-# Копируем собранный JAR-файл внутрь контейнера
-COPY target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+#
+# Package stage
+#
+FROM openjdk:11-jre-slim
+COPY --from=build /home/app/target/DSRproject.jar /usr/local/lib/backend.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/usr/local/lib/backend.jar"]
