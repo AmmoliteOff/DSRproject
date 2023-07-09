@@ -2,7 +2,7 @@ version: "3"
 services:
   backend:
     build: backend/
-    command: java -jar backend
+    command: java -jar DSRproject
     ports:
       - 8080:8080
       
