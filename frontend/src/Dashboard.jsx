@@ -84,13 +84,13 @@ export default function Dashboard(props){
 
         console.log(userInAccount)
 
-        axiosInstance.post(BACKEND_API_URL+"api/createAccount", null, { params:{
+        axiosInstance.post(BACKEND_API_URL+"/api/createAccount", null, { params:{
             title: title,
             description: description,
             users: userInAccount
         }}).then((res)=>{
             if(res.status === 200){
-                //navigate(0)
+                navigate(0)
             }
         })
     }

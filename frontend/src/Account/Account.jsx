@@ -66,11 +66,13 @@ export default function Account(props){
 
     function validateForm(){
         if(chosenType !== 0){
+            console.log(fullPrice)
             if(title!=="" && description!=="" && fullPrice!=0){
                 if(paymentMap.length === accountInfo.users.length){
                     if(chosenType!==1)
-                    setButtonEnabled(true)
+                        setButtonEnabled(true)
                     else{
+                        console.log("adsad")
                         var sum = 0
                         for(let i=0; i<paymentMap.length; i++){
                             sum+=paymentMap[i].debt
@@ -137,6 +139,11 @@ export default function Account(props){
         }
     }
 
+    function updatePaymentMap(c){
+        setPaymentMap(c)
+        validateForm()
+    }
+
     function createBill(){
 
         let usersMap = []
@@ -186,7 +193,7 @@ export default function Account(props){
                         </FormControl>
                         {chosenType!==2?<Input onChange={changeFullPrice} placeholder="Полная сумма"/>:<Typography>Полная сумма: {fullPrice}</Typography>}
                         {accountInfo.users.map(user=>{
-                            return(<UserLabel fullPrice = {fullPrice} key = {user.userId} user={user} type={chosenType} paymentState = {paymentMap} paymentSetter={setPaymentMap} updatePrice={updatePrice}/>
+                            return(<UserLabel fullPrice = {fullPrice} key = {user.userId} user={user} type={chosenType} paymentState = {paymentMap} paymentSetter={updatePaymentMap} updatePrice={updatePrice}/>
 
                             )
                         })}

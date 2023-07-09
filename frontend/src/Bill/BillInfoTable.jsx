@@ -8,7 +8,7 @@ export default function BillInfoTable(props){
             <Box display={"flex"} flexDirection={"column"}>
             {billInfos.map(billInfo=>{
                 return(
-                    <Box key = {billInfo.billId} display={"flex"} flexDirection={"row"}>
+                    <Box key = {billInfo.billInfoId} display={"flex"} flexDirection={"row"}>
                                                             <Avatar src={billInfo.user.imgLink}/>
                                     <Typography margin={"10px"}>{billInfo.user.name}</Typography>
                                     <Typography margin={"10px"}>{billInfo.user.surname}</Typography>
