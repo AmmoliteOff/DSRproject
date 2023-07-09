@@ -8,10 +8,19 @@
 2. Установить Node Js в систему
 3. Перейти в папку `frontend`
 4. `npm run build`
-5. `cd build`
-6. `npm install -g serve`
-7. `serve -s build`
+5. Установить и настроить nginx на раздачу статики. Пример:
+```
+server {
+  listen 3000;
+  server_name localhost;
 
+  location / {
+    root /usr/share/nginx/html;
+    index index.html;
+    try_files $uri $uri/ /index.html;
+  }
+}
+```
 ## Backend:
 Необходимо создать базу данных postgress.
 После создания БД можно переходить к настройке приложения:
@@ -27,3 +36,9 @@
 4. Установить Maven в систему
 5. `start mvn clean install`
 6. Запустить сервер `java -jar JARPACKAGENAME`
+
+## Запуск через Docker-compose:
+1. Настроить application.properties `(Backend)`
+2. Настроить constants.js `(Frontend)`
+3. ***ВАЖНО*** изменить логин и пароль от базы данных в `docker-compose.yml`
+4. Перейти в папку с проектом -> запустить ядро `Docker` -> прописать `docker-compose build` -> прописать `docker-compose up`
