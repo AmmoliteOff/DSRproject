@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import {useNavigate} from "react-router-dom";
 import axios from "axios";
-import { Box, Button, Typography, Dialog, DialogTitle, Input, Avatar} from "@mui/material";
+import { Box, Button, Typography, Dialog, DialogTitle, Input, Avatar, DialogContent} from "@mui/material";
 import React from "react";
 import AccountCard from "./Account/AccountCard";
 import Header from "./Utils/Header";
@@ -118,42 +118,46 @@ export default function Dashboard(props){
     return(
         <React.Fragment>
              <Dialog onClose={changePopUpState} open={popUpState}>          
-                <DialogTitle>Создание счёта</DialogTitle>
-                <Box width={"60vw"} height={"50vh"}>
-                    <Box display={"flex"} flexDirection={"column"}> 
+                <DialogTitle textAlign={'center'}>Создание счёта</DialogTitle>
+                <DialogContent>
+                <Box width={'50vh'}>
+                    <Box display={"flex"} flexDirection={"column"} minWidth={0} gap={0.5}>  
                         <Input id="titleInput" onChange={updateTitle} placeholder="Введите название счёта"/>
                         <Input id="descriptionInput" onChange={updateDescription} placeholder="Введите описание счёта"/>
                         <Input id="idInput" onChange={fetchUser} placeholder="Введите ID пользователя"/>
                     </Box>
                     {nextUserContainerEnabled?
-                    <Box onClick={addUser} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+                    <Box onClick={addUser} display={"flex"} boxShadow={'0 2px 5px rgba(0,0,0,0.5)'} border={'1px solid'} borderColor={'rgb(170,170,170)'} padding={'1%'} marginTop={'2%'} marginBottom={'2%'} borderRadius={'20px'} gap={1} minWidth={0}> 
                         <Avatar src={lastUserInfo.imgLink}/>
-                        <Typography>{lastUserInfo.name}</Typography>
-                        <Typography>{lastUserInfo.surname}</Typography>
+                        <Typography>{lastUserInfo.name} {lastUserInfo.surname}</Typography>
                     </Box>:
                         null}
                         {usersToAdd.length!=0?
                                                 <React.Fragment>
-                        <Typography>Пользователи в счёте</Typography>
+                        <Typography><b>Пользователи в счёте</b></Typography>
                             {usersToAdd.map(user=>{
                                 return(
-                                    <Box key={user.userId} display={"flex"} flexDirection={"row"} justifyContent={"space-between"}>
+                                    <Box key={user.userId} display={"flex"} boxShadow={'0 2px 5px rgba(0,0,0,0.5)'} border={'1px solid'} borderColor={'rgb(170,170,170)'} padding={'1%'} marginTop={'2%'} marginBottom={'2%'} borderRadius={'20px'} gap={1} minWidth={0}>
                                     <Avatar src={user.imgLink}/>
-                                    <Typography>{user.name}</Typography>
-                                    <Typography>{user.surname}</Typography>
+                                    <Typography>{user.name} {user.surname}</Typography>
                                 </Box>
                                 )
                             })}
                         </React.Fragment>
                         :null}
-                        <Button onClick={createAccount}>Создать счёт</Button>
+                        <Box display={'flex'} justifyContent={'end'} marginTop={'2%'}>
+                            <Button variant="contained" color="success" onClick={createAccount}>Создать счёт</Button>
+                        </Box>
                 </Box>
+                </DialogContent>
             </Dialog>
 
              {isLoaded?
-         <Box className = "dashboardContainer" sx={{width:"100%", height:"100vh"}}>
+         <Box className = "dashboardContainer" sx={{height:"100vh"}}>
              <Header updateAuthStatus={props.updateAuthStatus}/>
-             <Button onClick={changePopUpState}>Создать счёт</Button>
+             <Box display={"flex"} justifyContent={"end"} marginTop={"2%"} marginRight={"2%"}>
+                <Button variant="contained" color="success" onClick={changePopUpState}>Создать счёт</Button>
+             </Box>
                  {/* <Card sx={{borderRadius: "20px", margin:'2%', boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
                      <CardContent sx={{display:'flex', alignItems:'center'}}>
                      {accountsInfo.totalDebt === 0?

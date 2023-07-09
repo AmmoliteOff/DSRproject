@@ -64,6 +64,11 @@ export default function Bill(props){
         })
     }
 
+    function fillFullDebt(){
+        document.getElementById("repaymentInput").value =  userBillInfo.debt
+        setRepaymentValue(userBillInfo.debt)
+    }
+
     useEffect(()=>{
         if(userId!==-1 && isLoaded){
             setUserBillInfo(billData.billInfo.filter(billInfo=> billInfo.user.userId === userId)[0])
@@ -95,8 +100,11 @@ export default function Bill(props){
                     Погашение долга
                 </DialogTitle>
                 <DialogContent>
-                    <Input onChange={filterInputField} placeholder="Сумма"/>
-                    <Button onClick={produceRepayment}>
+                    <Input onChange={filterInputField} id="repaymentInput" placeholder="Сумма"/>
+                    <Button onClick={fillFullDebt}>
+                        Ввести всю сумму
+                    </Button>
+                    <Button variant="contained" color="success" onClick={produceRepayment}>
                         Погасить
                     </Button>
                 </DialogContent>
@@ -104,7 +112,9 @@ export default function Bill(props){
             <Header updateUserId = {setUserId} updateAuthStatus={props.updateAuthStatus}/>
             {isLoaded?
             <React.Fragment>
-                <BackButton/>
+                <Box margin={'2%'}>
+                    <BackButton/>
+                </Box>
                 <BillCard billInfo={billData}/>
                 <Card sx={{borderRadius: "20px", marginTop:"2%", margin:"2%", boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
                     <Box sx={{width:'100%', display: 'flex', justifyContent: 'space-between'}}>

@@ -2,12 +2,13 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate} from "react-router-dom"
 import React from "react"
 import BillCard from "../Bill/BillCard"
-import { Box, Dialog, DialogTitle, Button, Input, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, Typography} from "@mui/material"
+import { Box, Dialog, DialogTitle, Button, Input, FormControl, RadioGroup, FormControlLabel, Radio, FormLabel, Typography, DialogContent} from "@mui/material"
 import axios from "axios"
 import Header from "../Utils/Header"
 import UserLabel from "../Utils/UserLabel"
 import { BACKEND_API_URL } from "../Utils/constants"
 import BackButton from "../Utils/BackButton"
+import toLoginPage from "../Utils/UnauthorizedHandler"
 
 export default function Account(props){
 
@@ -40,6 +41,10 @@ export default function Account(props){
             if(res.status === 200){
                 setAccountInfo(res.data)
                 setLoaded(true)
+            }
+        }).catch(e=>{
+            if(e.status === 401){
+                toLoginPage()
             }
         })
     }
@@ -171,14 +176,15 @@ export default function Account(props){
 {isLoaded?
         <React.Fragment>
 <Dialog onClose={changePopUpState} open={popUpState}>          
-                <DialogTitle>Создание траты</DialogTitle>
-                <Box width={"60vw"} height={"50vh"}>
-                    <Box display={"flex"} flexDirection={"column"}> 
+                <DialogTitle textAlign={'center'}>Создание траты</DialogTitle>
+                <DialogContent>
+                <Box width={"50vh"}>
+                    <Box display={'flex'} gap={1} flexDirection={'column'} marginBottom={'3%'}>
                         <Input id="titleInput" onChange={updateTitle} placeholder="Введите название траты"/>
                         <Input id="descriptionInput" onChange={updateDescription} placeholder="Введите описание траты"/>
-
-                                            <FormControl>
-                        <FormLabel >Тип</FormLabel>
+                    </Box>
+                        <FormControl>
+                        <FormLabel>Тип</FormLabel>
                         <RadioGroup
                             value={chosenType}
                             onChange={typeChanged}
@@ -191,21 +197,30 @@ export default function Account(props){
                             <FormControlLabel value={2} control={<Radio />} label="Вручную" />
                         </RadioGroup>
                         </FormControl>
-                        {chosenType!==2?<Input onChange={changeFullPrice} placeholder="Полная сумма"/>:<Typography>Полная сумма: {fullPrice}</Typography>}
-                        {accountInfo.users.map(user=>{
-                            return(<UserLabel fullPrice = {fullPrice} key = {user.userId} user={user} type={chosenType} paymentState = {paymentMap} paymentSetter={updatePaymentMap} updatePrice={updatePrice}/>
+                        <Box>
+                            {chosenType!==2?<Input onChange={changeFullPrice} placeholder="Полная сумма"/>:<Typography>Полная сумма: {fullPrice}</Typography>}
+                        </Box>
+                        <Box display={'flex'} flexDirection={'column'} gap={1} marginTop={'3%'}>
+                            {accountInfo.users.map(user=>{
+                                return(<UserLabel fullPrice = {fullPrice} key = {user.userId} user={user} type={chosenType} paymentState = {paymentMap} paymentSetter={updatePaymentMap} updatePrice={updatePrice}/>
 
-                            )
-                        })}
-                    </Box>
-                        <Button disabled={!buttonEnabled} onClick={createBill}>Создать трату</Button>
+                                )
+                            })}
+                        </Box>
+                        <Box display={'flex'} justifyContent={'end'} marginTop={'3%'}>
+                            <Button disabled={!buttonEnabled} color='success' variant="contained" onClick={createBill}>Создать трату</Button>
+                        </Box>
                 </Box>
+                </DialogContent>
             </Dialog>
 
           <Box className = "accountContainer" sx={{width:"100%", height:"100vh"}}>
             <Header updateAuthStatus={props.updateAuthStatus}/>
-            <BackButton/>
-            <Button onClick={changePopUpState}>Создать трату</Button>
+            <Box display={'flex'} justifyContent={'space-between'} margin={'2%'}>
+                <BackButton/>
+                <Button variant="contained" color="success" onClick={changePopUpState}>Создать трату</Button>
+            </Box>
+
             {isLoaded?
             <React.Fragment>
                 {accountInfo.bills.map(obj=>{

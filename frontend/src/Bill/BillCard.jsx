@@ -22,7 +22,7 @@ export default function BillCard(props){
                     <Typography sx={{fontSize:'2.5vw', textAlign:'end'}}><b>Сумма: {billInfo.fullPrice}</b> ₽</Typography>
                     {billInfo.owed !== 0?
                     <Typography sx={{fontSize:'1.7vw', textAlign:'end'}}><b>Остаток: {billInfo.owed}</b> ₽</Typography>:
-                    <Typography sx={{fontSize:'1.7vw', textAlign:'end', color: "green"}}><b>Трата закрыта!</b></Typography>}
+                    <Typography sx={{fontSize:'1.7vw', textAlign:'end', color: "green"}}><b>Трата закрыта</b></Typography>}
                     </CardContent>
                 </CardActionArea>
             </Card>
@@ -37,7 +37,7 @@ export default function BillCard(props){
                     <Typography sx={{fontSize:'2.5vw', textAlign:'end'}}><b>Сумма: {billInfo.fullPrice}</b> ₽</Typography>
                     {billInfo.owed !== 0?
                     <Typography sx={{fontSize:'1.7vw', textAlign:'end'}}><b>Остаток: {billInfo.owed}</b> ₽</Typography>:
-                    <Typography sx={{fontSize:'1.7vw', textAlign:'end', color: "green"}}><b>Трата закрыта!</b></Typography>}
+                    <Typography sx={{fontSize:'1.7vw', textAlign:'end', color: "green"}}><b>Трата закрыта</b></Typography>}
                 </CardContent>
             </CardActionArea>
             </Card>

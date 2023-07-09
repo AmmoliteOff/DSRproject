@@ -114,8 +114,10 @@ export default function BillDivederField(props){
         case 1:
             return(
                 <Box display={"flex"} flexDirection={"row"}>
-            <Input onChange={percentChange} placeholder="Процент">
-            </Input>
+            <Box marginRight={'2%'}>
+                <Input onChange={percentChange} placeholder="Процент"/>  
+            </Box>
+
             {props.paymentState.filter(obj => obj.id === id).length!==0?
             <Typography>({props.fullPrice*props.paymentState.filter(obj => obj.id === id)[0].debt/100.0}₽)</Typography>:
             null}
