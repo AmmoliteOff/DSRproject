@@ -8,6 +8,7 @@ import org.dsr.practice.services.AccountsService;
 import org.dsr.practice.services.BillInfoService;
 import org.dsr.practice.services.BillsService;
 import org.dsr.practice.services.UsersService;
+import org.dsr.practice.utils.PriceConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,13 +37,30 @@ public class AutoBillSplitter implements BillSplitter {
         var description = billSplitData.getDescription();
         var usersIn = billSplitData.getUsersMap();
         var fullPrice = billSplitData.getFullPrice();
+
+
         try {
             var account = accountsService.getAccount(accountId);
             Bill bl = new Bill(account, title, description, fullPrice);
+
+            var wholePart = fullPrice/(100*account.getUsers().size());
+            var secondaryPart = (fullPrice%100) / account.getUsers().size();
+            var debt = wholePart*100 + secondaryPart;
+            var fullPriceCopy = fullPrice;
+            int counter = 1;
+
             var bill = billsService.AddBill(bl); //Находим только что созданую трату
             for (User usr : account.getUsers()) {
-                BillInfo b = new BillInfo(bill, usr,  fullPrice / account.getUsers().size());
+                BillInfo b;
+                if(counter != account.getUsers().size()) {
+                    b = new BillInfo(bill, usr, debt);
+                }
+                else{
+                    b = new BillInfo(bill, usr, fullPriceCopy);
+                }
+                counter++;
                 billInfoService.Add(b);
+                fullPriceCopy -= debt;
             }
         }
         catch (Exception e){

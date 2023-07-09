@@ -7,11 +7,13 @@ import org.dsr.practice.repos.BillRepository;
 import org.dsr.practice.utils.PriceConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class BillsService {
     private AccountsService accountsService;
     private BillRepository billRepository;

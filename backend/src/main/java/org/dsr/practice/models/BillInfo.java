@@ -63,7 +63,7 @@ public class BillInfo {
         this.user = user;
     }
 
-    public Double getDebt() {
+    public Double getDebt() { //SHOW USE ONLY, DON'T USE IN MATH OPERATIONS
         return debt/100.0;
     }
 

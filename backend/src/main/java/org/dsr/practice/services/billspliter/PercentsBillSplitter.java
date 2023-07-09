@@ -41,9 +41,20 @@ public class PercentsBillSplitter implements BillSplitter {
             Bill bl = new Bill(account, title, description, fullPrice);
             var bill = billsService.AddBill(bl); //Находим только что созданую трату
 
+            int counter = 1;
+            var fullPriceCopy = fullPrice;
+
             for (Long usrId : usersIn.keySet()) {
+                BillInfo b;
                 var usr = usersService.getUser(usrId);
-                BillInfo b = new BillInfo(bill, usr, (fullPrice * usersIn.get(usrId))/10000); //Создаём отдельный объект нового долга c учётом процентов
+                if(counter!=usersIn.size()) {
+                    b = new BillInfo(bill, usr, (fullPrice * usersIn.get(usrId)) / 10000); //Создаём отдельный объект нового долга c учётом процентов
+                    fullPriceCopy-=(fullPrice * usersIn.get(usrId)) / 10000;
+                }
+                else{
+                    b = new BillInfo(bill, usr,  fullPriceCopy);
+                }
+                counter++;
                 billInfoService.Add(b);
             }
         }

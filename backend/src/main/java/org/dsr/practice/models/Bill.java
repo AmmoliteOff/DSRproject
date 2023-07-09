@@ -59,9 +59,9 @@ public class Bill {
     public Double getOwed() {
         var res = 0.0;
         for(int i = 0; i<billInfo.size(); i++){
-            res+=billInfo.get(i).getDebt();
+            res+=billInfo.get(i).getRawDebt();
         }
-        return res;
+        return res/100.0;
     }
 
     public void setOwed(Long owed) {
