@@ -73,17 +73,4 @@ public class BillsService {
         return true;
     }
 
-    public AccountsService getAccountsService() {
-        return accountsService;
-    }
-
-    public void setAccountsService(AccountsService accountsService) {
-        this.accountsService = accountsService;
-    }
-
-
-    public UsersService getUsersService() {
-        return usersService;
-    }
-
 }

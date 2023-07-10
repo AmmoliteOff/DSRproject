@@ -48,6 +48,9 @@ public class  AccountsService {
 
             for (User usr : usersIn) {
                 var c = usr.getAccounts();
+                if(c==null) {
+                    c = new ArrayList<Account>();
+                }
                 c.add(account);
                 usr.setAccounts(c);
                 usersService.Update(usr);
