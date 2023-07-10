@@ -42,9 +42,10 @@ export default function Account(props){
                 setAccountInfo(res.data)
                 setLoaded(true)
             }
-        }).catch(e=>{
-            if(e.status === 401){
-                toLoginPage()
+        })
+        .catch(e =>{
+            if(e.response.status === 401){
+                props.updateAuthStatus(false)
             }
         })
     }
@@ -167,6 +168,11 @@ export default function Account(props){
         axiosInstance.post(BACKEND_API_URL+"/api/createBill", data).then(res=>{
             if(res.status === 200){
                 navigate(0)
+            }
+        })
+        .catch(e =>{
+            if(e.response.status === 401){
+                props.updateAuthStatus(false)
             }
         })
     }

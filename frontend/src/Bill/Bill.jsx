@@ -39,6 +39,11 @@ export default function Bill(props){
                 setLoaded(true)
             }
         })
+        .catch(e =>{
+            if(e.response.status === 401){
+                props.updateAuthStatus(false)
+            }
+        })
     }
 
 
@@ -60,6 +65,11 @@ export default function Bill(props){
         .then(res=>{
             if(res.status === 200){
                navigate(0)
+            }
+        })
+        .catch(e =>{
+            if(e.response.status === 401){
+                props.updateAuthStatus(false)
             }
         })
     }

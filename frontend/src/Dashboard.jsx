@@ -38,11 +38,9 @@ export default function Dashboard(props){
         }
         )
         .catch(res=>{
-            // if(res.response.status === 401){
-            //     props.updateAuthStatus(false)
-            // }
-            props.updateAuthStatus(false)
-            console.log(res)
+             if(res.response.status === 401){
+                 props.updateAuthStatus(false)
+             }
         }   
         )
     }
