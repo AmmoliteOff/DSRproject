@@ -7,6 +7,7 @@ import React from "react";
 import AccountCard from "./Account/AccountCard";
 import Header from "./Utils/Header";
 import { BACKEND_API_URL } from "./Utils/constants";
+import ErrorPage from "./ErrorPage";
 
 export default function Dashboard(props){
 
@@ -23,6 +24,7 @@ export default function Dashboard(props){
     const[title, setTitle] = useState("")
     const[description, setDescription] = useState("")
     const[nextUserContainerEnabled, setNextUserContainerEnabled] = useState(false)
+    const[isErrorDashboardLoad, setErrorDashboardLoad] = useState(false)
 
     function loadUserInfo(){
         axiosInstance.get(BACKEND_API_URL+"/api/accounts")
@@ -38,10 +40,16 @@ export default function Dashboard(props){
         }
         )
         .catch(res=>{
+            if(res.message!=="Network Error"){
              if(res.response.status === 401){
                  props.updateAuthStatus(false)
              }
-        }   
+        } 
+        else{
+            setErrorDashboardLoad(true)
+        } 
+     }
+
         )
     }
 
@@ -79,8 +87,6 @@ export default function Dashboard(props){
             else
                 userInAccount+=usersToAdd[i].userId
         }
-
-        console.log(userInAccount)
 
         axiosInstance.post(BACKEND_API_URL+"/api/createAccount", null, { params:{
             title: title,
@@ -156,16 +162,6 @@ export default function Dashboard(props){
              <Box display={"flex"} justifyContent={"end"} marginTop={"2%"} marginRight={"2%"}>
                 <Button variant="contained" color="success" onClick={changePopUpState}>Создать счёт</Button>
              </Box>
-                 {/* <Card sx={{borderRadius: "20px", margin:'2%', boxShadow:'0 2px 5px rgba(0,0,0,0.5)'}}>
-                     <CardContent sx={{display:'flex', alignItems:'center'}}>
-                     {accountsInfo.totalDebt === 0?
-                     <Typography sx={{fontSize:'2.5vw'}}>Задолжностей нет!</Typography>:
-        
-                     <Typography sx={{fontSize:'2.5vw'}}>Задолжность составляет <b>{accountsInfo.totalDebt}</b> ₽</Typography>
-                     }  
-                 </CardContent>
-                 </Card> */}
-
              <React.Fragment>
                  {accountsInfo.map(obj=>{
                 
@@ -176,7 +172,7 @@ export default function Dashboard(props){
                  })}
                  </React.Fragment>
          </Box>:
-         null}
+         isErrorDashboardLoad?<ErrorPage/>:null}
         </React.Fragment>
     )
 }
