@@ -8,7 +8,6 @@ import Header from "../Utils/Header"
 import UserLabel from "../Utils/UserLabel"
 import { BACKEND_API_URL } from "../Utils/constants"
 import BackButton from "../Utils/BackButton"
-import toLoginPage from "../Utils/UnauthorizedHandler"
 
 export default function Account(props){
 
